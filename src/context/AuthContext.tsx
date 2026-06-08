@@ -81,7 +81,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(session?.user ?? null)
 
         if (session?.user) {
-          await fetchProfile(session.user.id)
+          await Promise.race([
+            fetchProfile(session.user.id),
+            new Promise((_, reject) =>
+              setTimeout(() => reject(new Error('fetchProfile timed out')), 5000)
+            )
+          ])
         }
       } catch (err) {
         console.error('Auth init error:', err)
@@ -103,7 +108,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(session?.user ?? null)
 
         if (session?.user) {
-          await fetchProfile(session.user.id)
+          await Promise.race([
+            fetchProfile(session.user.id),
+            new Promise((_, reject) =>
+              setTimeout(() => reject(new Error('fetchProfile timed out')), 5000)
+            )
+          ])
         } else {
           setProfile(null)
         }
