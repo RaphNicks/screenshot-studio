@@ -1,10 +1,10 @@
 {
   "functions": {
     "api/webhooks/lemonsqueezy.js": {
-      "bodyParser": false
+      "maxDuration": 10
     },
     "api/create-checkout.js": {
-      "bodyParser": true
+      "maxDuration": 10
     }
   }
 }

@@ -71,10 +71,22 @@ export default async function handler(req, res) {
   }
 
   // Get raw body for signature verification
-  const rawBody = await new Promise((resolve) => {
+  export const config = {
+  api: {
+    bodyParser: false,
+  },
+  }
+
+  export default async function handler(req, res) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' })
+  }
+
+  const rawBody = await new Promise((resolve, reject) => {
     let data = ''
     req.on('data', chunk => { data += chunk })
     req.on('end', () => resolve(data))
+    req.on('error', reject)
   })
 
   // Verify webhook signature
@@ -194,4 +206,5 @@ export default async function handler(req, res) {
     console.error('Webhook handler error:', err.message)
     return res.status(500).json({ error: err.message })
   }
+}
 }
