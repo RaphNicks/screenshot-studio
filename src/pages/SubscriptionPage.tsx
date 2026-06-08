@@ -6,6 +6,8 @@ import {
 import Button from '../components/ui/Button'
 import Badge from '../components/ui/Badge'
 import GradientText from '../components/ui/GradientText'
+import { useCheckout } from '../hooks/useCheckout'
+import { useAuth } from '../context/AuthContext'
 
 // ── Types ──────────────────────────────────────────────────────────────────
 type BillingCycle = 'monthly' | 'annual'
@@ -153,9 +155,19 @@ function FaqItem({ q, a }: { q: string; a: string }) {
 // ── Main Page ──────────────────────────────────────────────────────────────
 export default function SubscriptionPage() {
   const [billing, setBilling] = useState<BillingCycle>('annual')
+  const { profile } = useAuth()
+  const { startCheckout, loading: checkoutLoading, error: checkoutError } = useCheckout()
+
+  const isPro = profile?.plan === 'pro'
 
   const annualSavings = (plan: Plan) =>
     Math.round(((plan.monthlyPrice - plan.annualPrice) / plan.monthlyPrice) * 100)
+
+  const handlePlanClick = (planId: string) => {
+    if (planId === 'pro') {
+      startCheckout()
+    }
+  }
 
   return (
     <div className="relative overflow-hidden min-h-screen">
@@ -207,6 +219,13 @@ export default function SubscriptionPage() {
             </button>
           </div>
         </div>
+
+        {/* Checkout error */}
+        {checkoutError && (
+          <div className="max-w-md mx-auto mb-8 p-3.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm text-center">
+            {checkoutError}
+          </div>
+        )}
 
         {/* Plan Cards */}
         <div className="grid md:grid-cols-3 gap-5 mb-20">
@@ -274,16 +293,40 @@ export default function SubscriptionPage() {
                   </p>
 
                   {/* CTA */}
-                  <Link to={plan.id === 'free' ? '/studio' : '#'} className="block mb-6">
-                    <Button
-                      variant={plan.ctaVariant}
-                      size="md"
-                      className="w-full justify-center"
-                      rightIcon={<ArrowRight size={14} />}
-                    >
-                      {plan.cta}
-                    </Button>
-                  </Link>
+                  <div className="mb-6">
+                    {plan.id === 'free' ? (
+                      <Link to="/studio">
+                        <Button
+                          variant={plan.ctaVariant}
+                          size="md"
+                          className="w-full justify-center"
+                          rightIcon={<ArrowRight size={14} />}
+                        >
+                          {plan.cta}
+                        </Button>
+                      </Link>
+                    ) : plan.id === 'pro' ? (
+                      <Button
+                        variant={plan.ctaVariant}
+                        size="md"
+                        className="w-full justify-center"
+                        onClick={() => handlePlanClick(plan.id)}
+                        loading={checkoutLoading}
+                        rightIcon={!checkoutLoading ? <ArrowRight size={14} /> : undefined}
+                      >
+                        {isPro ? 'Current Plan ✓' : plan.cta}
+                      </Button>
+                    ) : (
+                      <Button
+                        variant={plan.ctaVariant}
+                        size="md"
+                        className="w-full justify-center"
+                        rightIcon={<ArrowRight size={14} />}
+                      >
+                        {plan.cta}
+                      </Button>
+                    )}
+                  </div>
 
                   {/* Divider */}
                   <div className="border-t border-border mb-5" />

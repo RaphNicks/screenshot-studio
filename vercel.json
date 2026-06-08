@@ -1,0 +1,10 @@
+{
+  "functions": {
+    "api/webhooks/lemonsqueezy.js": {
+      "bodyParser": false
+    },
+    "api/create-checkout.js": {
+      "bodyParser": true
+    }
+  }
+}

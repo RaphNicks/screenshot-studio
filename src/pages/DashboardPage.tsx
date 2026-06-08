@@ -1,11 +1,12 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import {
   Crown, LogOut, ShieldCheck, LayoutGrid,
-  Settings, TrendingUp, Image, Plus
+  Settings, TrendingUp, Image, Plus, X
 } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { useUserExports } from '../hooks/useUserExports'
+import { useCheckout } from '../hooks/useCheckout'
 import ExportCard from '../components/dashboard/ExportCard'
 import AccountSettings from '../components/dashboard/AccountSettings'
 import Button from '../components/ui/Button'
@@ -25,18 +26,29 @@ function StatCard({ label, value, sub }: { label: string; value: string | number
 }
 
 export default function DashboardPage() {
-  const { profile, signOut } = useAuth()
+  const { profile, signOut, refreshProfile } = useAuth()
   const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState<Tab>('exports')
+  const [showUpgradeSuccess, setShowUpgradeSuccess] = useState(false)
 
   const { exports, loading, deleteExport, getSignedUrl, refresh } = useUserExports()
+  const { startCheckout, loading: checkoutLoading } = useCheckout()
 
   const isPro = profile?.plan === 'pro'
 
+  // Check for upgrade success redirect from Lemon Squeezy
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('upgraded') === 'true') {
+      setShowUpgradeSuccess(true)
+      window.history.replaceState({}, '', '/dashboard')
+      refreshProfile()
+    }
+  }, [])
+
   const handleSignOut = async () => {
-  await signOut()
-  // Small delay to let state clear before navigation
-  setTimeout(() => navigate('/'), 100)
+    await signOut()
+    setTimeout(() => navigate('/'), 100)
   }
 
   const memberSince = profile?.created_at
@@ -59,7 +71,28 @@ export default function DashboardPage() {
 
       <div className="max-w-5xl mx-auto">
 
-        {/* ── Header ──────────────────────────────────────────────────── */}
+        {/* Upgrade success banner */}
+        {showUpgradeSuccess && (
+          <div className="mb-6 p-4 rounded-2xl bg-gold/10 border border-gold/30 flex items-center gap-3">
+            <Crown size={18} className="text-gold shrink-0" />
+            <div className="flex-1">
+              <p className="text-gold font-display font-semibold">
+                Welcome to Pro! 🎉
+              </p>
+              <p className="text-gold/70 text-sm">
+                Your account has been upgraded. All Pro features are now unlocked.
+              </p>
+            </div>
+            <button
+              onClick={() => setShowUpgradeSuccess(false)}
+              className="text-gold/50 hover:text-gold transition-colors"
+            >
+              <X size={16} />
+            </button>
+          </div>
+        )}
+
+        {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10">
           <div>
             <p className="text-text-dim text-sm mb-1">Your dashboard</p>
@@ -97,7 +130,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* ── Plan Banner ──────────────────────────────────────────────── */}
+        {/* Plan Banner */}
         <div className={`relative p-5 rounded-2xl border mb-8 overflow-hidden ${
           isPro ? 'border-gold/30 bg-panel' : 'border-border bg-panel'
         }`}>
@@ -127,38 +160,41 @@ export default function DashboardPage() {
                 </p>
               </div>
             </div>
-            {!isPro && (
-              <Link to="/pricing" className="shrink-0">
-                <Button size="sm" leftIcon={<Crown size={13} />}>
-                  Upgrade to Pro
+
+            {isPro ? (
+              <a
+                href="https://app.lemonsqueezy.com/my-orders"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="shrink-0"
+              >
+                <Button size="sm" variant="secondary">
+                  Manage Billing
                 </Button>
-              </Link>
+              </a>
+            ) : (
+              <Button
+                size="sm"
+                leftIcon={<Crown size={13} />}
+                onClick={startCheckout}
+                loading={checkoutLoading}
+                className="shrink-0"
+              >
+                Upgrade to Pro
+              </Button>
             )}
           </div>
         </div>
 
-        {/* ── Stats Row ────────────────────────────────────────────────── */}
+        {/* Stats Row */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <StatCard
-            label="Total Exports"
-            value={profile?.export_count ?? 0}
-          />
-          <StatCard
-            label="Saved Images"
-            value={exports.length}
-            sub="last 30 days"
-          />
-          <StatCard
-            label="Days Active"
-            value={daysActive}
-          />
-          <StatCard
-            label="Plan"
-            value={isPro ? 'Pro ⚡' : 'Free'}
-          />
+          <StatCard label="Total Exports" value={profile?.export_count ?? 0} />
+          <StatCard label="Saved Images" value={exports.length} sub="last 30 days" />
+          <StatCard label="Days Active" value={daysActive} />
+          <StatCard label="Plan" value={isPro ? 'Pro ⚡' : 'Free'} />
         </div>
 
-        {/* ── Tabs ─────────────────────────────────────────────────────── */}
+        {/* Tabs */}
         <div className="flex items-center gap-1 p-1 bg-panel border border-border rounded-xl w-fit mb-6">
           {([
             { id: 'exports', label: 'Saved Exports', icon: <LayoutGrid size={14} /> },
@@ -179,7 +215,7 @@ export default function DashboardPage() {
           ))}
         </div>
 
-        {/* ── Tab Content ──────────────────────────────────────────────── */}
+        {/* Tab Content */}
         {activeTab === 'exports' && (
           <div>
             {loading ? (
