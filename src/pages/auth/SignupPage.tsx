@@ -1,12 +1,11 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, } from 'react-router-dom'
 import { Camera, Mail, Lock, User, ArrowRight, Eye, EyeOff, Check } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import Button from '../../components/ui/Button'
 
 export default function SignupPage() {
   const { signUp } = useAuth()
-  const navigate = useNavigate()
 
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
