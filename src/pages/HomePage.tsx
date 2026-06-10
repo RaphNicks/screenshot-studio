@@ -82,9 +82,11 @@ export default function HomePage() {
           </div>
 
           <h1 className="opacity-0-init animate-fade-up animate-delay-100 font-display font-800 text-5xl md:text-7xl leading-[1.05] tracking-tight mb-6">
-            Make your screenshots
+            <span className="text-text-primary">Make your screenshots</span>
             <br />
-            <GradientText variant="accent">look extraordinary</GradientText>
+            <span className="bg-gradient-to-r from-accent-light to-purple-300 bg-clip-text text-transparent">
+              look extraordinary
+            </span>
           </h1>
 
           <p className="opacity-0-init animate-fade-up animate-delay-200 text-text-secondary text-lg md:text-xl max-w-2xl mx-auto leading-relaxed mb-10">
@@ -111,27 +113,27 @@ export default function HomePage() {
         </div>
 
         {/* Hero Visual */}
-        <div className="opacity-0-init animate-fade-up animate-delay-500 mt-20 max-w-4xl mx-auto">
-          <div className="relative rounded-2xl border border-border overflow-hidden shadow-panel">
+        <div className="opacity-0-init animate-fade-up animate-delay-500 mt-16 max-w-2xl mx-auto px-4">
+          <div className="relative rounded-2xl border border-border overflow-hidden shadow-panel w-full">
             {/* Fake window chrome */}
             <div className="bg-panel border-b border-border px-4 py-3 flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-red-500/70" />
-              <div className="w-3 h-3 rounded-full bg-yellow-500/70" />
-              <div className="w-3 h-3 rounded-full bg-green-500/70" />
-              <div className="flex-1" />
-              <div className="h-5 w-48 bg-border rounded-md" />
-              <div className="flex-1" />
+              <div className="w-3 h-3 rounded-full bg-red-500/70 shrink-0" />
+              <div className="w-3 h-3 rounded-full bg-yellow-500/70 shrink-0" />
+              <div className="w-3 h-3 rounded-full bg-green-500/70 shrink-0" />
+              <div className="flex-1 mx-2">
+                <div className="h-5 w-32 bg-border rounded-md mx-auto" />
+              </div>
             </div>
             {/* Canvas preview */}
-            <div className="bg-surface p-6 md:p-10 flex items-center justify-center min-h-[320px]">
+            <div className="bg-surface p-4 md:p-8 flex items-center justify-center">
               <div
-                className="w-full max-w-xl rounded-2xl p-8 flex items-center justify-center"
+                className="w-full rounded-2xl p-4 md:p-6 flex items-center justify-center"
                 style={{
                   background: 'linear-gradient(135deg, #1a0533 0%, #0d1a3a 50%, #001a1a 100%)',
                   boxShadow: '0 32px 80px rgba(0,0,0,0.8)',
                 }}
               >
-                <div className="bg-void/80 backdrop-blur rounded-xl border border-border p-6 w-full font-mono text-sm shadow-inner-top">
+                <div className="bg-void/80 backdrop-blur rounded-xl border border-border p-4 md:p-6 w-full font-mono text-xs md:text-sm shadow-inner-top">
                   <div className="flex items-center gap-2 mb-3">
                     <span className="text-text-dim">~/project</span>
                     <span className="text-accent">$</span>
@@ -145,7 +147,6 @@ export default function HomePage() {
               </div>
             </div>
           </div>
-          <div className="absolute -inset-1 bg-accent/5 blur-2xl rounded-3xl -z-10" />
         </div>
       </section>
 
