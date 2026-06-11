@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
-  Check, X, Zap, Crown, Building2, ArrowRight, HelpCircle, ChevronDown
+  Check, X, Zap, Crown, ArrowRight, HelpCircle, ChevronDown
 } from 'lucide-react'
 import Button from '../components/ui/Button'
 import Badge from '../components/ui/Badge'
@@ -73,28 +73,6 @@ const PLANS: Plan[] = [
       'Browser & device mockups',
       'No watermarks',
       'Priority support',
-    ],
-    limits: [],
-  },
-  {
-    id: 'team',
-    name: 'Team',
-    icon: <Building2 size={18} />,
-    monthlyPrice: 29,
-    annualPrice: 22,
-    description: 'For agencies, product teams, and studios.',
-    cta: 'Contact Sales',
-    ctaVariant: 'gold',
-    highlighted: false,
-    features: [
-      'Everything in Pro',
-      'Up to 10 team members',
-      'Shared asset library',
-      'Custom brand presets',
-      'Team usage analytics',
-      'SSO & admin controls',
-      'Dedicated account manager',
-      'SLA & uptime guarantee',
     ],
     limits: [],
   },
@@ -228,7 +206,7 @@ export default function SubscriptionPage() {
         )}
 
         {/* Plan Cards */}
-        <div className="grid md:grid-cols-3 gap-5 mb-20">
+        <div className="grid md:grid-cols-2 gap-5 mb-20 max-w-3xl mx-auto">
           {PLANS.map((plan) => {
             const price = billing === 'annual' ? plan.annualPrice : plan.monthlyPrice
             const savings = plan.monthlyPrice > 0 ? annualSavings(plan) : 0

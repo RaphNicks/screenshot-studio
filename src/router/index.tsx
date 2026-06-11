@@ -14,6 +14,7 @@ import DashboardPage from '../pages/DashboardPage'
 import AdminPage from '../pages/AdminPage'
 import ProtectedRoute from '../components/auth/ProtectedRoute'
 import AdminRoute from '../components/auth/AdminRoute'
+import TermsPage from '../pages/TermsPage'
 
 // ── Layouts ────────────────────────────────────────────────────────────────
 const WithNav = ({ children }: { children: ReactNode }) => (
@@ -42,6 +43,10 @@ export const router = createBrowserRouter([
   {
     path: '/pricing',
     element: <WithNav><SubscriptionPage /></WithNav>,
+  },
+  {
+    path: '/terms',
+    element: <TermsPage />,
   },
 
   // ── Auth routes ────────────────────────────────────────────────────────

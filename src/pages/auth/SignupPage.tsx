@@ -171,9 +171,8 @@ export default function SignupPage() {
                     {[1, 2, 3, 4].map((i) => (
                       <div
                         key={i}
-                        className={`h-1 flex-1 rounded-full transition-all duration-300 ${
-                          i <= strength ? strengthColor[strength] : 'bg-border'
-                        }`}
+                        className={`h-1 flex-1 rounded-full transition-all duration-300 ${i <= strength ? strengthColor[strength] : 'bg-border'
+                          }`}
                       />
                     ))}
                   </div>
@@ -183,6 +182,17 @@ export default function SignupPage() {
                 </div>
               )}
             </div>
+
+            <p className="text-center text-text-dim text-xs mt-6 leading-relaxed">
+              By signing up you agree to our{' '}
+              <Link to="/terms" className="text-accent hover:text-accent-light transition-colors">
+                Terms of Service
+              </Link>{' '}
+              and{' '}
+              <Link to="/terms" className="text-accent hover:text-accent-light transition-colors">
+                Privacy Policy
+              </Link>
+            </p>
 
             <Button
               type="submit"
